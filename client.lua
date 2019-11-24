@@ -200,7 +200,7 @@ end
 tooclose2 = false
 for k,v in ipairs (cartable) do
 Wait(5)
-if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 5 then
+if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 45 then
 tooclose2 = true
 end
 end		
