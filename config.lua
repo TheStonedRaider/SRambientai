@@ -40,7 +40,7 @@ Config.ElseAreaMulti = 0.4    ---- Eveywhere else
 
 
 -------------------Debug mode!
-debugrestart = true   --- Set TRUE if restarting script when server is running 
+debugrestart = false   --- Set TRUE if restarting script when server is running 
 
 debugmode =  false  --- shows the search and spawn spots 
 
