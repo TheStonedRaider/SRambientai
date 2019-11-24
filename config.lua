@@ -20,7 +20,7 @@ Config.MaxSpawndis = 250   ----- Maximum spawning distance from player
 
 Config.minSpawndis2 = 150 ----- Minimum spawning distance from  other players (best kept the same as Config.minSpawndis
 
-Config.Deldis = 225 ----- Distance that cars will be set as no longer needed ! Always keep this higher than - Config.MaxSpawndis 
+Config.Deldis = 255 ----- Distance that cars will be set as no longer needed ! Always keep this higher than - Config.MaxSpawndis 
 
 Config.Speedmulti = 1.0        --------- Multiplier for avarage speed of vehicles
 
