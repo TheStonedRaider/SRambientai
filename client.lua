@@ -1,8 +1,48 @@
 local hasspawned = true
 local density = Config.MaxPerPlayer
 local cartable = {}
+refreshrate = 1000
 local peddensity = Config.peddensity
 local parkedcars = Config.parkedcars
+pedtype = "posh"
+
+	function Tl(T)
+    local count = 0
+    for _ in pairs(T) do
+	--Wait(0)
+	count = count + 1 
+	end
+----print("count",count)
+	--print(count)
+	if count == 0 then
+	--planttable = {}
+	end
+	--print("count",count)
+    return count
+
+end
+Citizen.CreateThread(function()
+Wait(300)
+refreshrate = Config.refreshrate
+generalpedcount = Tl(generalpeds)
+citycarscount = Tl(citycars)
+poshcitycarscount = Tl(poshcitycars)
+hoodcitycarscount = Tl(hoodcitycars)
+industrialcitycarscount = Tl(industrialcitycars)
+sandycarscount = Tl(sandycars)	
+elsecarscount = Tl(elsecars)	
+industrialpedcount = Tl(industrialpeds)
+hoodpedscount = Tl(hoodpeds)
+poshpedscount = Tl(poshpeds)
+bumpedscount = Tl(bumpeds)	
+hipsterpedcount = Tl(hipsterpeds)	
+lapedscount = Tl(lapeds)
+businesspedscount = Tl(businesspeds)
+richpedcount = Tl(richpeds)
+print("generalpedcount",generalpedcount)
+	end)
+	
+
 
 
 AddEventHandler('playerSpawned', function()
@@ -29,6 +69,7 @@ Citizen.CreateThread(function()
 	SetPedDensityMultiplierThisFrame(peddensity)
 	SetScenarioPedDensityMultiplierThisFrame(0.0,0.0)
 
+
 	end
 end)
 
@@ -43,25 +84,29 @@ Citizen.CreateThread(function()
 	end
 	while true do 
 	Wait(3000)
+	local random1 = math.random(-150,150)
 	local pedcoords = GetEntityCoords(GetPlayerPed(-1))
 	isinsandy = false
 	isintown = false
 	isinpaleto = false
 	isinposhcity = false
-		if GetDistanceBetweenCoords(pedcoords,517.15,-2816.5,44.2,false) < 700 or GetDistanceBetweenCoords(mapcoords,2357.15,2242.5,65.2,false) < 600  then 
+		if GetDistanceBetweenCoords(pedcoords,295.15,-3093.5,44.2,false) < 900 + random1 or GetDistanceBetweenCoords(mapcoords,2357.15,2242.5,65.2,false) < 600 + random1  then 
 		isinindustrial = true
-		density = Config.MaxPerPlayer*0.1
-		elseif GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 then    ---- sandy    
-		density = Config.MaxPerPlayer*0.5
+		density = Config.MaxPerPlayer*Config.IndustrialMulti
+		elseif GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 + random1 then    ---- sandy    
+		density = Config.MaxPerPlayer*Config.SandyMulti
 		isinsandy = true
-		elseif GetDistanceBetweenCoords(pedcoords,-807.15,216.11,75.2,false) < 1300 then  --- posh town 
-		density = Config.MaxPerPlayer*0.8
+		elseif GetDistanceBetweenCoords(pedcoords,-65.15,6312.11,31.2,false) < 1300 + random1 then    ---- paleto    
+		density = Config.MaxPerPlayer*Config.PaletoMulti
+		isinsandy = true
+		elseif GetDistanceBetweenCoords(pedcoords,-807.15,216.11,75.2,false) < 1300 + random1 then  --- posh town 
+		density = Config.MaxPerPlayer*Config.PoshCityMulti
 		isinposhcity = true
-		elseif GetDistanceBetweenCoords(pedcoords,24.15,-770.60,44.2,false) < 2000 then
+		elseif GetDistanceBetweenCoords(pedcoords,24.15,-770.60,44.2,false) < 2000 + random1 then  --- city center
 		isintown = true
-		density = Config.MaxPerPlayer
+		density = Config.MaxPerPlayer*Config.CityMulti
 		else
-		density = Config.MaxPerPlayer*0.3
+		density = Config.MaxPerPlayer*Config.ElseAreaMulti
 		end
 		local closeplayers = 0
 		local targetCoords1 = GetEntityCoords(GetPlayerPed(-1))
@@ -84,12 +129,14 @@ Citizen.CreateThread(function()
 end)
 
 function startupspawn()
+Wait(1200)
 Citizen.CreateThread(function()
 while true do 
-Wait(12) 
+Wait(refreshrate) 
 if debugmode == true then
 print(Tablelength(cartable))
 end
+
 if Tablelength(cartable) < density or Tablelength(cartable) < Config.Minimum then
 Wait(0)
 local Ped = GetPlayerPed(-1)
@@ -100,12 +147,12 @@ vel = 0
 end
 repeat
 Wait(0)
-model = Carlist()
-until model ~= nil
+ model,pedtype  = Carlist()
+until model ~= nil and pedtype ~= nil
 --if model ~= nil then ---- pick car 
 Wait(0)
 local chance = math.random(1,4)
-local diff2 = math.random(Config.minSpawndis,Config.MaxSpawndis)
+local diff2 = math.random(Config.minSpawndis + 15,Config.MaxSpawndis)
 if chance == 1 then
 local diff = math.random(0,150)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 - diff,(diff2 + (vel * 2.0) ),0.0)
@@ -152,8 +199,8 @@ end
 end 
 tooclose2 = false
 for k,v in ipairs (cartable) do
-Wait(15)
-if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 50 then
+Wait(5)
+if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 5 then
 tooclose2 = true
 end
 end		
@@ -163,33 +210,31 @@ if debugmode == true then
 debug3(b)
 end
 SetEntityAsMissionEntity(carid,1,1)
-carid2 = NetworkGetNetworkIdFromEntity(carid)
+--carid2 = NetworkGetNetworkIdFromEntity(carid)
 --	NetworkSetEntityCanBlend(carid,true)
 --	SetNetworkIdExistsOnAllMachines(carid2, true)
 --	NetworkSetNetworkIdDynamic(carid2, true)
-SetNetworkIdCanMigrate(carid2,true)
+--SetNetworkIdCanMigrate(carid2,true)
 speed = 10
-pedmod = 549978415
-RequestModel(pedmod)
-while not HasModelLoaded(pedmod) do
-Citizen.Wait(1)
-end
-SetVehicleForwardSpeed(carid,16,1)
-Wait(12)
+
+
+Wait(5)
 if GetVehicleBodyHealth(carid) > 999.9 then
+--print("pedtype1",pedtype)
+Setpedincar(pedtype)
+SetVehicleForwardSpeed(carid,16)
+--SetEntityVelocity(carid,10.0,16.0,10.0)
 Setcarspeed(carid)
 SetVehicleEngineOn(carid,true,true,true)
-pedid = NetworkGetNetworkIdFromEntity(driver)
+--pedid = NetworkGetNetworkIdFromEntity(driver)
 --NetworkSetEntityCanBlend(driver,true)
 --SetNetworkIdExistsOnAllMachines(pedid, true)
 --NetworkSetNetworkIdDynamic(pedid, true)
-SetNetworkIdCanMigrate(pedid,true)
+--SetNetworkIdCanMigrate(pedid,true)
 --SetEntityAsNoLongerNeeded(carid)
 --SetEntityAsNoLongerNeeded(driver)
---SetVehicleForwardSpeed(carid,speed,1)
-		
+--SetVehicleForwardSpeed(carid,speed,1)	
 table.insert(cartable, {carid = carid})
-Wait(10)
 end
 else
 SetModelAsNoLongerNeeded(model)
@@ -204,41 +249,83 @@ end
 end)
 end
 
-function Setcarspeed(carid)
-speed = math.random(1,100)
-SetVehicleForwardSpeed(carid,speed,1)
-if speedvar == 1 then   --- slow
+
+
+function Setpedincar(pedtype)
+local rndm2 = math.random(1,10)
+if pedtype == "gen" then
+randomped = math.random(1,generalpedcount)
+pedmod = generalpeds[randomped].id
+elseif pedtype == "ind" then
+randomped = math.random(1,industrialpedcount)
+pedmod = industrialpeds[randomped].id
+elseif pedtype == "rich" then
+randomped = math.random(1,richpedcount)
+pedmod = richpeds[randomped].id 
+elseif pedtype == "posh" then
+
+elseif pedtype == "bum" then
+randomped = math.random(1,bumpedscount)
+pedmod = bumpeds[randomped].id 
+elseif pedtype == "hip" then
+randomped = math.random(1,hipsterpedcount)
+pedmod = hipsterpeds[randomped].id 
+end
+RequestModel(pedmod)
+while not HasModelLoaded(pedmod) do
+Citizen.Wait(1)
+--print("pedmode2",pedmod)
+end
 driver = CreatePedInsideVehicle(carid,4,pedmod,-1,1,262144)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+function Setcarspeed(carid)
+speed = math.random(1.0,100.0)
+
+if speedvar == 1 then   --- slow
+
 if speed < 10 then
-TaskVehicleDriveWander(driver,carid,15.0,191)
+TaskVehicleDriveWander(driver,carid,15.0*Config.Speedmulti,191)
 elseif speed < 20 then
-TaskVehicleDriveWander(driver,carid,20.0,191)
+TaskVehicleDriveWander(driver,carid,20.0*Config.Speedmulti,191)
 elseif speed < 70 then
-TaskVehicleDriveWander(driver,carid,16.0,191)
+TaskVehicleDriveWander(driver,carid,16.0*Config.Speedmulti,191)
 elseif speed < 101 then
-TaskVehicleDriveWander(driver,carid,17.0,191)
+TaskVehicleDriveWander(driver,carid,17.0*Config.Speedmulti,191)
 end
 elseif speedvar == 2 then    --- med 
-driver = CreatePedInsideVehicle(carid,4,pedmod,-1,1,262144)
+
 if speed < 10 then
-TaskVehicleDriveWander(driver,carid,16.0,191)
+TaskVehicleDriveWander(driver,carid,16.0*Config.Speedmulti,191)
 elseif speed < 20 then
-TaskVehicleDriveWander(driver,carid,20.0,191)
+TaskVehicleDriveWander(driver,carid,20.0*Config.Speedmulti,191)
 elseif speed < 70 then
-TaskVehicleDriveWander(driver,carid,22.0,191)
+TaskVehicleDriveWander(driver,carid,22.0*Config.Speedmulti,191)
 elseif speed < 101 then
-TaskVehicleDriveWander(driver,carid,24.0,191)
+TaskVehicleDriveWander(driver,carid,24.0*Config.Speedmulti,191)
 end
 elseif speedvar == 3 then             -- fast 
-driver = CreatePedInsideVehicle(carid,4,pedmod,-1,1,262144)
+
 if speed < 10 then
-TaskVehicleDriveWander(driver,carid,34.0,191)
+TaskVehicleDriveWander(driver,carid,34.0*Config.Speedmulti,191)
 elseif speed < 20 then
-TaskVehicleDriveWander(driver,carid,27.0,191)
+TaskVehicleDriveWander(driver,carid,27.0*Config.Speedmulti,191)
 elseif speed < 70 then
-TaskVehicleDriveWander(driver,carid,22.0,191)
+TaskVehicleDriveWander(driver,carid,22.0*Config.Speedmulti,191)
 elseif speed < 101 then
-TaskVehicleDriveWander(driver,carid,24.0,191)
+TaskVehicleDriveWander(driver,carid,24.0*Config.Speedmulti,191)
 end
 end
 end
@@ -249,42 +336,49 @@ areaset = false
 if isintown == true then    -- town center
 areaset = true
 speedvar = 1
-CC = math.random(1,11)
+CC = math.random(1,143)
 model = citycars[CC].id
---print("chance",CC)
-return(model)
+pedtype = citycars[CC].pedtype
+--print("pedtype3",pedtype)
+return model,pedtype
 end
 if isinposhcity == true then    -- town posh
 areaset = true
 speedvar = 1
 CC = math.random(1,11)
 model = poshcitycars[CC].id
+pedtype = poshcitycars[CC].pedtype
+--print("pedtype4",pedtype)
 --print("chance2",CC)
-return(model)
+return model,pedtype 
 end
 if isinsandy == true then    -- sand shores
 areaset = true
  CC = math.random(1,27)
 model = sandycars[CC].id
+pedtype = sandycars[CC].pedtype
+--print("pedtype5",pedtype)
 speedvar = 2
-return(model)
+return model,pedtype 
 end
 if isinindustrial == true then   -- S E Industrial docks 
 areaset = true
 math.randomseed(GetGameTimer())
  CC = math.random(2,21)
 model = industrialcitycars[CC].id
+pedtype = industrialcitycars[CC].pedtype
+--print("pedtype6",pedtype)
 speedvar = 3
-return(model)
+return model,pedtype 
 end
-
 if areaset == false then -- just in case no area is found 
 math.randomseed(round(GetGameTimer()/4))
  CC = math.random(2,58)
 model = elsecars[CC].id
+pedtype = elsecars[CC].pedtype
+--print("pedtype7",pedtype)
 speedvar = 3
-
-return(model)
+return model,pedtype 
 end
 end
 function round(num, numDecimalPlaces)
@@ -430,7 +524,7 @@ end)
 	function Tablelength(T)
     local count = 0
     for _ in pairs(T) do
-	Wait(0)
+	--Wait(0)
 	count = count + 1 
 	end
 ----print("count",count)
@@ -454,5 +548,5 @@ end
     SetTextOutline()
     SetTextEntry("STRING")
     AddTextComponentString(text)
-    DrawText(x - width/2, y - height/2 + 0.005)
+    DrawText(x , y )
 end
