@@ -210,7 +210,10 @@ tooclose2 = true
 end
 end		
 if tooclose2 == false then
-carid = CreateVehicle(model,b,h,true, 0)
+
+carid = CreateVehicle(model,b,h,true,0)
+MT = GetOffsetFromEntityInWorldCoords(carid,4.0,0.0,0.0)
+SetEntityCoords(carid, MT, false, false, false, false)
 if debugmode == true then
 debug3(b)
 end
@@ -295,6 +298,45 @@ end
 
 
 
+function SetcarspeedNUL(carid)
+speed = math.random(1.0,100.0)
+
+if speedvar == 1 then   --- slow
+
+if speed < 10 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 20 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 70 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 101 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+end
+elseif speedvar == 2 then    --- med 
+
+if speed < 10 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 20 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 70 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 101 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+end
+elseif speedvar == 3 then             -- fast 
+
+if speed < 10 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,2000.0,0.0,2125724159,50)
+elseif speed < 20 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 70 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+elseif speed < 101 then
+TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+end
+end
+end
+
 
 
 
@@ -304,35 +346,35 @@ speed = math.random(1.0,100.0)
 if speedvar == 1 then   --- slow
 
 if speed < 10 then
-TaskVehicleDriveWander(driver,carid,15.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,15.0*Config.Speedmulti,447)
 elseif speed < 20 then
-TaskVehicleDriveWander(driver,carid,20.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,20.0*Config.Speedmulti,447)
 elseif speed < 70 then
-TaskVehicleDriveWander(driver,carid,16.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,16.0*Config.Speedmulti,447)
 elseif speed < 101 then
-TaskVehicleDriveWander(driver,carid,17.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,17.0*Config.Speedmulti,447)
 end
 elseif speedvar == 2 then    --- med 
 
 if speed < 10 then
-TaskVehicleDriveWander(driver,carid,16.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,16.0*Config.Speedmulti,447)
 elseif speed < 20 then
-TaskVehicleDriveWander(driver,carid,20.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,20.0*Config.Speedmulti,447)
 elseif speed < 70 then
-TaskVehicleDriveWander(driver,carid,22.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,22.0*Config.Speedmulti,447)
 elseif speed < 101 then
-TaskVehicleDriveWander(driver,carid,24.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,24.0*Config.Speedmulti,447)
 end
 elseif speedvar == 3 then             -- fast 
 
 if speed < 10 then
-TaskVehicleDriveWander(driver,carid,34.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,34.0*Config.Speedmulti,447)
 elseif speed < 20 then
-TaskVehicleDriveWander(driver,carid,27.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,27.0*Config.Speedmulti,447)
 elseif speed < 70 then
-TaskVehicleDriveWander(driver,carid,22.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,22.0*Config.Speedmulti,447)
 elseif speed < 101 then
-TaskVehicleDriveWander(driver,carid,24.0*Config.Speedmulti,191)
+TaskVehicleDriveWander(driver,carid,24.0*Config.Speedmulti,447)
 end
 end
 end
@@ -495,7 +537,7 @@ end)
 Citizen.CreateThread(function()
 local tooclose = false
 	while true do 
-		Wait(1500)
+		Wait(500)
 		  		if Tablelength(pedtable) > 0 then
 			for k,v in pairs (pedtable) do
 			Wait(10)
@@ -527,20 +569,33 @@ local tooclose = false
 				cleared = false
 					for k,v in pairs (players) do
 if cleared == false then					
-					Wait(100) 
+					Wait(10) 
 				
 					--otherplayer = GetPlayerPed(v)
 					local coords2 = GetEntityCoords(GetPlayerPed(v))
 
 					local deldis =  GetDistanceBetweenCoords(coords2,carcoords,false)		
 					--print(deldis)
+					--if IsPedInAnyVehicle(v,false) then
+					--print"bing1"
+					--if GetVehicleClass(GetVehiclePedIsIn(v,false)) == 18 then
+					--print"bing2"
+					if deldis < 80 then 
+						driverped = GetPedInVehicleSeat(curcarid,-1)
+						SetEntityAsNoLongerNeeded(curcarid)
+						SetEntityAsNoLongerNeeded(driverped)
+					table.remove(cartable, k)					
+					end		
+--end
+--end					
+					
 					
 						if deldis < Config.Deldis then
 						
 						tooclose = true
 						
 						end
-						print(IsVehicleSeatFree(curcarid,-1))
+						--print(IsVehicleSeatFree(curcarid,-1))
 						if IsVehicleSeatFree(curcarid,-1) == true and deldis > Config.Deldis*0.3then  
 						SetEntityAsNoLongerNeeded(curcarid)
 						table.remove(cartable, k)
