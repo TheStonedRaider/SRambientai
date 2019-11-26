@@ -1,11 +1,12 @@
 local hasspawned = true
 local density = Config.MaxPerPlayer
 local cartable = {}
+local pedtable = {}
 refreshrate = 1000
 local peddensity = Config.peddensity
 local parkedcars = Config.parkedcars
 pedtype = "posh"
-
+running = false
 	function Tl(T)
     local count = 0
     for _ in pairs(T) do
@@ -129,8 +130,12 @@ Citizen.CreateThread(function()
 end)
 
 function startupspawn()
+
+if running == false then
+running = true
 Wait(1200)
 Citizen.CreateThread(function()
+print"AI spawning loops"
 while true do 
 Wait(refreshrate) 
 if debugmode == true then
@@ -248,6 +253,7 @@ end
 end
 end)
 end
+end
 
 
 
@@ -277,6 +283,7 @@ Citizen.Wait(1)
 --print("pedmode2",pedmod)
 end
 driver = CreatePedInsideVehicle(carid,4,pedmod,-1,1,262144)
+table.insert(pedtable, {pedid = driver})
 end
 
 
@@ -489,15 +496,39 @@ Citizen.CreateThread(function()
 local tooclose = false
 	while true do 
 		Wait(1500)
+		  		if Tablelength(pedtable) > 0 then
+			for k,v in pairs (pedtable) do
+			Wait(10)
+				if DoesEntityExist(v.pedid) == false then
+				table.remove(pedtable, k)
+				if debugmode == true then
+				print"ped missing remove ped from table"
+				end
+				elseif IsPedInAnyVehicle(v.pedi,false) then
+				table.remove(pedtable, k)
+				if debugmode == true then
+				print"ped not in car remove ped from table"
+				end
+				end
+				end
+				end
   		if Tablelength(cartable) > 0 then
 			for k,v in pairs (cartable) do
 				if DoesEntityExist(v.carid) == false then
 				table.remove(cartable, k)
+				if debugmode == true then
+				print"clear missing car form table"
+				end
+
 				else
+				local curcarid = v.carid
 	local carcoords = GetEntityCoords(v.carid)			
 				tooclose = false
-					for k,v in pairs (players) do	
-					Wait(0) 
+				cleared = false
+					for k,v in pairs (players) do
+if cleared == false then					
+					Wait(100) 
+				
 					--otherplayer = GetPlayerPed(v)
 					local coords2 = GetEntityCoords(GetPlayerPed(v))
 
@@ -505,16 +536,36 @@ local tooclose = false
 					--print(deldis)
 					
 						if deldis < Config.Deldis then
+						
 						tooclose = true
-
+						
 						end
-					end
+						print(IsVehicleSeatFree(curcarid,-1))
+						if IsVehicleSeatFree(curcarid,-1) == true and deldis > Config.Deldis*0.3then  
+						SetEntityAsNoLongerNeeded(curcarid)
+						table.remove(cartable, k)
+						cleared = true
+						if debugmode == true then
+						print"ped not in car - remove car"
+						end
+						end
+
+				
+						end
+						
+						end
 						if tooclose == false then
-						driverped = GetPedInVehicleSeat(v.carid,-1)
-						SetEntityAsNoLongerNeeded(v.carid)
+						driverped = GetPedInVehicleSeat(curcarid,-1)
+						SetEntityAsNoLongerNeeded(curcarid)
 						SetEntityAsNoLongerNeeded(driverped)
 						table.remove(cartable, k)
+						cleared = true
+				if debugmode == true then
+				print"car far away Remove"
+				end
+				
 						end
+
 					end
 				end
 			end
