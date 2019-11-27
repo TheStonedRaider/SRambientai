@@ -1,8 +1,9 @@
 Config                            = {}
+local running = false
    --- 
-Config.refreshrate = 10
+Config.refreshrate = 0
 
-Config.MaxPerPlayer = 15 --------- How many cars are spawned per player, 
+Config.MaxPerPlayer = 30 --------- How many cars are spawned per player, 
 ------ this devided by the amount of players near  you down to the Set minimum 
 
 Config.Minimum = 1     ------ will try to not let the amount of cars spawned go below this amount 
@@ -12,13 +13,13 @@ Config.peddensity = 0.5     ------------ Density of peds minimum = 0.0 max = 1.0
 Config.parkedcars = 0.5        ----------- Density of parked cars  minimum = 0.0 max = 1.0
 ------ this devided by the amount of players near  you 
 
-Config.DisToHalf = 250   ---- Distance 
+Config.DisToHalf = 250   ---- Distance to antoher player to lower Density.
 
-Config.minSpawndis = 150   ----- Minimum spawning distance from player
+Config.minSpawndis = 90   ----- Minimum spawning distance from player
 
 Config.MaxSpawndis = 250   ----- Maximum spawning distance from player 
 
-Config.minSpawndis2 = 150 ----- Minimum spawning distance from  other players (best kept the same as Config.minSpawndis
+Config.minSpawndis2 = 120 ----- Minimum spawning distance from  other players (best kept the same as Config.minSpawndis
 
 Config.Deldis = 255 ----- Distance that cars will be set as no longer needed ! Always keep this higher than - Config.MaxSpawndis 
 
@@ -40,11 +41,11 @@ Config.ElseAreaMulti = 0.4    ---- Eveywhere else
 
 
 -------------------Debug mode!
-debugrestart = false   --- Set TRUE if restarting script when server is running 
+debugrestart = true   --- Set TRUE if restarting script when server is running 
 
 debugmode =  false  --- shows the search and spawn spots 
 
-
+debugmode1 =  false  --- shows the search and spawn spots 
 	 citycars = { --  this is the format you need to put in for your possible locations.
 	{['id'] = -344943009,['pedtype'] = "gen"},
 	{['id'] = 1039032026,['pedtype'] = "gen"},
