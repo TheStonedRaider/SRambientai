@@ -89,7 +89,9 @@ Citizen.CreateThread(function()
 	end
 	while true do 
 	Wait(3000)
-	local random1 = math.random(-150,150)
+	local _,_,_,_,_,seed = GetLocalTime()
+	math.randomseed(seed)
+	 random1 = math.random(-150,150)
 	local pedcoords = GetEntityCoords(GetPlayerPed(-1))
 	local areafound = false
 	isinsandy = false
@@ -100,12 +102,34 @@ Citizen.CreateThread(function()
 		isinindustrial = true
 		density = Config.MaxPerPlayer*Config.IndustrialMulti
 		areafound = true
+		areafound = true
+			--	print"acrea found ind"
 		end
 		if areafound == false then
 		Wait(30)
-		GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 + random1 then    ---- sandy    
+		if GetDistanceBetweenCoords(pedcoords,-807.15,216.11,75.2,false) < 800 + random1 then  --- posh town 
+		density = Config.MaxPerPlayer*Config.PoshCityMulti
+		isinposhcity = true
+		areafound = true
+		--print"acrea found posh"
+		end
+		end
+		if areafound == false then
+		Wait(30)
+		if GetDistanceBetweenCoords(pedcoords,224.15,-792.60,44.2,false) < 800 + random1 then  --- city center
+		isintown = true
+		areafound = true
+				--print"acrea found town"
+		density = Config.MaxPerPlayer*Config.CityMulti
+		end
+		end
+		if areafound == false then
+		Wait(30)
+		if GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 + random1 then    ---- sandy    
 		density = Config.MaxPerPlayer*Config.SandyMulti
 		isinsandy = true
+		areafound = true
+			--	print"acrea found sand"
 		end
 		end
 		if areafound == false then
@@ -113,29 +137,22 @@ Citizen.CreateThread(function()
 		if GetDistanceBetweenCoords(pedcoords,-65.15,6312.11,31.2,false) < 1300 + random1 then    ---- paleto    
 		density = Config.MaxPerPlayer*Config.PaletoMulti
 		isinsandy = true
+		areafound = true
+				--print"acrea found pal"
 		end
 		end
-		if areafound == false then
-		Wait(30)
-		if GetDistanceBetweenCoords(pedcoords,-807.15,216.11,75.2,false) < 1300 + random1 then  --- posh town 
-		density = Config.MaxPerPlayer*Config.PoshCityMulti
-		isinposhcity = true
-		end
-		end
-		if areafound == false then
-		Wait(30)
-		if GetDistanceBetweenCoords(pedcoords,24.15,-770.60,44.2,false) < 2000 + random1 then  --- city center
-		isintown = true
-		density = Config.MaxPerPlayer*Config.CityMulti
-		end
+
+
 		if areafound == false then
 		Wait(30)
 		density = Config.MaxPerPlayer*Config.ElseAreaMulti
+		
+				--print"acrea found none"
 		end
 		local closeplayers = 0
 		local targetCoords1 = GetEntityCoords(GetPlayerPed(-1))
 		local players = GetActivePlayers()
-
+--print("density",density)
 	peddensity = Config.peddensity
 	parkedcars = Config.parkedcars
 		for k,v in pairs (players) do	
@@ -147,9 +164,11 @@ Citizen.CreateThread(function()
 			density = (density / closeplayers)
 			peddensity = (peddensity / closeplayers)
 			parkedcars = (parkedcars / closeplayers)
+			--print("density",density)
 			end
 		end
 	end
+	
 end)
 
 function startupspawn()
@@ -158,7 +177,7 @@ if running == false then
 running = true
 Wait(1200)
 Citizen.CreateThread(function()
-print"AI spawning loops"
+--print"AI spawning loops"
 while true do 
 Wait(refreshrate) 
  carcount = Tablelength(cartable)
@@ -182,11 +201,13 @@ if debugmode == true then
 end 
 --RequestModel(model) 
 end 
---Wait(0)
+Wait(0)
+	
+	math.randomseed(GetGameTimer())
 local chance = math.random(1,4)
-local diff2 = math.random(Config.minSpawndis + 10,Config.MaxSpawndis)
+local diff2 = math.random(Config.minSpawndis + 20,Config.MaxSpawndis)
 if chance == 1 then
-local diff = math.random(0,150)
+local diff = math.random(0,110)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 - diff,(diff2 + (vel * 2.0) ),0.0)
 posforward = true 
 elseif chance == 2 then
@@ -214,9 +235,22 @@ local tooclose = false
 local coords2 = GetEntityCoords(GetPlayerPed(-1))
 local spawndis2 = GetDistanceBetweenCoords(coords2,b,false)
 local pedheading = GetEntityHeading(Ped)
+if chance > 1 then
+if posforward == false then
+if h > pedheading + 90 or h < pedheading - 90 then
+tooclose = true
+Wait(0)
+end
+else
+if h > pedheading - 90 and h < pedheading + 90 then
+tooclose = true
+else
+Wait(0)
+end
+end
+end
+if tooclose == false then
 if spawndis2 < Config.MaxSpawndis + vel and spawndis2 > (Config.minSpawndis + vel*2) then
-----if posforward == true then
---if h > pedheading - 90 and h < pedheading + 90 then
 for k,v in pairs (players) do
 if tooclose == false then
 local coords = GetEntityCoords(GetPlayerPed(v))
@@ -230,33 +264,13 @@ else
 tooclose = true
 end
 end
---[[else
-if h > pedheading + 90 and h < pedheading - 90 then
-for k,v in pairs (players) do	
-Wait(0) 
-local coords = GetEntityCoords(GetPlayerPed(v))
-if GetDistanceBetweenCoords(coords,b,false) < (Config.minSpawndis2 + vel) then
-tooclose = true 
-end 
-end
-else
-tooclose = true
-end
-end
-end]]
-
-
-
-
-
-
-
 
 if tooclose == false then
 tooclose2 = false
 for k,v in ipairs (cartable) do
+Wait(0)
 if tooclose2 == false then
-if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 35 then
+if Vdist(GetEntityCoords(v.carid),b) < 35 then
 tooclose2 = true
 end
 Wait(0)
@@ -297,15 +311,15 @@ Setcarspeed(carid)
 --SetEntityAsNoLongerNeeded(driver)
 --SetVehicleForwardSpeed(carid,speed,1)	
 table.insert(cartable, {carid = carid})
+
 end
 else
 SetModelAsNoLongerNeeded(model)
 end
-end
-Wait(0)
 else
 SetModelAsNoLongerNeeded(model)
 --end
+end
 end
 end
 end)
@@ -345,48 +359,41 @@ end
 
 
 
-
-
-
-
-
-
-
 function SetcarspeedNUL(carid)
 speed = math.random(1.0,100.0)
 local playercoords = GetEntityCoords(GetPlayerPed(-1))
 if speedvar == 1 then   --- slow
 
 if speed < 10 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 20 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 70 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 101 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 end
 elseif speedvar == 2 then    --- med 
 
 if speed < 10 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 20 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 70 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 101 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 end
 elseif speedvar == 3 then             -- fast 
 
 if speed < 10 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 20 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 70 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 elseif speed < 101 then
-TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,16.0,2125724159,50)
 end
 end
 end
@@ -475,7 +482,7 @@ speedvar = 3
 return model,pedtype 
 end
 if areaset == false then -- just in case no area is found 
-math.randomseed(round(GetGameTimer()/4))
+math.randomseed(round(GetGameTimer()))
  CC = math.random(2,58)
 model = elsecars[CC].id
 pedtype = elsecars[CC].pedtype
@@ -592,7 +599,7 @@ Citizen.CreateThread(function()
 local tooclose = false
 	while true do 
 		Wait(500)
-		  		if Tablelength(pedtable) > 0 then
+		  		if pedtable ~= {} then
 			for k,v in pairs (pedtable) do
 			Wait(10)
 				if DoesEntityExist(v.pedid) == false then
@@ -600,7 +607,9 @@ local tooclose = false
 				if debugmode == true then
 				print"ped missing remove ped from table"
 				end
-				elseif IsPedInAnyVehicle(v.pedi,false) then
+				elseif IsPedInAnyVehicle(v.pedid,false) then
+				else
+				SetEntityAsNoLongerNeeded(v.pedid)
 				table.remove(pedtable, k)
 				if debugmode == true then
 				print"ped not in car remove ped from table"
@@ -608,7 +617,7 @@ local tooclose = false
 				end
 				end
 				end
-  		if Tablelength(cartable) > 0 then
+  		if cartable ~= {} then
 			for k,v in pairs (cartable) do
 				if DoesEntityExist(v.carid) == false then
 				table.remove(cartable, k)
@@ -669,6 +678,7 @@ if tooclose3 == false then
 						SetEntityAsNoLongerNeeded(curcarid)
 						SetEntityAsNoLongerNeeded(driverped)
 						table.remove(cartable, k)
+						
 				if debugmode == true then
 				print"car far away Remove"
 				end
@@ -683,7 +693,7 @@ end)
 	function Tablelength(T)
     local count = 0
     for _ in pairs(T) do
-	--Wait(0)
+	Wait(0)
 	count = count + 1 
 	end
 ----print("count",count)
