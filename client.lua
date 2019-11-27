@@ -181,7 +181,7 @@ posforward = false
 else 
 local diff = math.random(0,150)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 + diff,(-130.0 + (vel * 1.0) ),0.0)
-posforward = true 
+posforward = false 
 end
 if debugmode == true then
 print("density",density)
