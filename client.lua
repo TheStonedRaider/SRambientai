@@ -91,6 +91,7 @@ Citizen.CreateThread(function()
 	Wait(3000)
 	local random1 = math.random(-150,150)
 	local pedcoords = GetEntityCoords(GetPlayerPed(-1))
+	local areafound = false
 	isinsandy = false
 	isintown = false
 	isinpaleto = false
@@ -98,19 +99,32 @@ Citizen.CreateThread(function()
 		if GetDistanceBetweenCoords(pedcoords,295.15,-3093.5,44.2,false) < 900 + random1 or GetDistanceBetweenCoords(mapcoords,2357.15,2242.5,65.2,false) < 600 + random1  then 
 		isinindustrial = true
 		density = Config.MaxPerPlayer*Config.IndustrialMulti
-		elseif GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 + random1 then    ---- sandy    
+		areafound = true
+		end
+		if areafound == false then
+		GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 + random1 then    ---- sandy    
 		density = Config.MaxPerPlayer*Config.SandyMulti
 		isinsandy = true
-		elseif GetDistanceBetweenCoords(pedcoords,-65.15,6312.11,31.2,false) < 1300 + random1 then    ---- paleto    
+		end
+		end
+		if areafound == false then
+		if GetDistanceBetweenCoords(pedcoords,-65.15,6312.11,31.2,false) < 1300 + random1 then    ---- paleto    
 		density = Config.MaxPerPlayer*Config.PaletoMulti
 		isinsandy = true
-		elseif GetDistanceBetweenCoords(pedcoords,-807.15,216.11,75.2,false) < 1300 + random1 then  --- posh town 
+		end
+		end
+		if areafound == false then
+		if GetDistanceBetweenCoords(pedcoords,-807.15,216.11,75.2,false) < 1300 + random1 then  --- posh town 
 		density = Config.MaxPerPlayer*Config.PoshCityMulti
 		isinposhcity = true
-		elseif GetDistanceBetweenCoords(pedcoords,24.15,-770.60,44.2,false) < 2000 + random1 then  --- city center
+		end
+		end
+		if areafound == false then
+		if GetDistanceBetweenCoords(pedcoords,24.15,-770.60,44.2,false) < 2000 + random1 then  --- city center
 		isintown = true
 		density = Config.MaxPerPlayer*Config.CityMulti
-		else
+		end
+		if areafound == false then
 		density = Config.MaxPerPlayer*Config.ElseAreaMulti
 		end
 		local closeplayers = 0
