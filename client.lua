@@ -5,6 +5,7 @@ local pedtable = {}
 refreshrate = 1000
 local peddensity = Config.peddensity
 local parkedcars = Config.parkedcars
+carcount = 0
 pedtype = "posh"
 running = false
 	function Tl(T)
@@ -69,6 +70,9 @@ Citizen.CreateThread(function()
 	SetParkedVehicleDensityMultiplierThisFrame(parkedcars)
 	SetPedDensityMultiplierThisFrame(peddensity)
 	SetScenarioPedDensityMultiplierThisFrame(0.0,0.0)
+	if debugmode1 == true then
+drawTxt(0.300, 0.100, 0.2,0.2,0.5, "Car count  = "..carcount.."", 250, 250, 250, 255)
+end
 
 
 	end
@@ -138,11 +142,8 @@ Citizen.CreateThread(function()
 print"AI spawning loops"
 while true do 
 Wait(refreshrate) 
-if debugmode == true then
-print(Tablelength(cartable))
-end
-
-if Tablelength(cartable) < density or Tablelength(cartable) < Config.Minimum then
+ carcount = Tablelength(cartable)
+if carcount < density or carcount < Config.Minimum then
 Wait(0)
 local Ped = GetPlayerPed(-1)
 if IsPedInAnyVehicle(Ped,true) then
@@ -154,33 +155,49 @@ repeat
 Wait(0)
  model,pedtype  = Carlist()
 until model ~= nil and pedtype ~= nil
---if model ~= nil then ---- pick car 
-Wait(0)
+RequestModel(model) 
+while not HasModelLoaded(model) do
+Citizen.Wait(0)
+if debugmode == true then
+
+end 
+--RequestModel(model) 
+end 
+--Wait(0)
 local chance = math.random(1,4)
-local diff2 = math.random(Config.minSpawndis + 15,Config.MaxSpawndis)
+local diff2 = math.random(Config.minSpawndis + 10,Config.MaxSpawndis)
 if chance == 1 then
 local diff = math.random(0,150)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 - diff,(diff2 + (vel * 2.0) ),0.0)
+posforward = true 
 elseif chance == 2 then
 local diff = math.random(0,150)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 + diff,(diff2 + (vel * 2.0) ),0.0)
+posforward = true 
 elseif chance == 3 then
 local diff = math.random(0,150)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 - diff,(-130.0 + (vel * 1.0) ),0.0)
+posforward = false
 else 
 local diff = math.random(0,150)
 coords = GetOffsetFromEntityInWorldCoords(Ped,0.0 + diff,(-130.0 + (vel * 1.0) ),0.0)
+posforward = true 
 end
 if debugmode == true then
 print("density",density)
 debug2(coords)
 end
+
 a,b,h = GetClosestVehicleNodeWithHeading(coords.x,coords.y,coords.z,8,3,0)
+--a,b,h = GetNthClosestVehicleNodeFavourDirection(coords.x,coords.y,coords.z,GetE,8,3,0)
 players = GetActivePlayers()
 local tooclose = false
 local coords2 = GetEntityCoords(GetPlayerPed(-1))
 local spawndis2 = GetDistanceBetweenCoords(coords2,b,false)
-if spawndis2 < Config.MaxSpawndis + vel and spawndis2 > (Config.minSpawndis + vel/2) then
+local pedheading = GetEntityHeading(Ped)
+if spawndis2 < Config.MaxSpawndis + vel and spawndis2 > (Config.minSpawndis + vel*2) then
+----if posforward == true then
+--if h > pedheading - 90 and h < pedheading + 90 then
 for k,v in pairs (players) do	
 Wait(0) 
 local coords = GetEntityCoords(GetPlayerPed(v))
@@ -191,28 +208,40 @@ end
 else
 tooclose = true
 end
+--[[else
+if h > pedheading + 90 and h < pedheading - 90 then
+for k,v in pairs (players) do	
+Wait(0) 
+local coords = GetEntityCoords(GetPlayerPed(v))
+if GetDistanceBetweenCoords(coords,b,false) < (Config.minSpawndis2 + vel) then
+tooclose = true 
+end 
+end
+else
+tooclose = true
+end
+end
+end]]
+
+
+
+
+
+
+
+
 if tooclose == false then
-Wait(0)
-
-RequestModel(model) 
-while not HasModelLoaded(model) do
-Citizen.Wait(1000)
-if debugmode == true then
-
-end 
---RequestModel(model) 
-end 
 tooclose2 = false
 for k,v in ipairs (cartable) do
 Wait(5)
-if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 45 then
+if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 35 then
 tooclose2 = true
 end
 end		
 if tooclose2 == false then
 
 carid = CreateVehicle(model,b,h,true,0)
-MT = GetOffsetFromEntityInWorldCoords(carid,4.0,0.0,0.0)
+MT = GetOffsetFromEntityInWorldCoords(carid,3.0,0.0,0.0)
 SetEntityCoords(carid, MT, false, false, false, false)
 if debugmode == true then
 debug3(b)
@@ -300,17 +329,17 @@ end
 
 function SetcarspeedNUL(carid)
 speed = math.random(1.0,100.0)
-
+local playercoords = GetEntityCoords(GetPlayerPed(-1))
 if speedvar == 1 then   --- slow
 
 if speed < 10 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 20 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 70 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 101 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 end
 elseif speedvar == 2 then    --- med 
 
@@ -581,12 +610,16 @@ if cleared == false then
 					--if GetVehicleClass(GetVehiclePedIsIn(v,false)) == 18 then
 					--print"bing2"
 					if deldis < 80 then 
+				
 						driverped = GetPedInVehicleSeat(curcarid,-1)
 						SetEntityAsNoLongerNeeded(curcarid)
-						SetEntityAsNoLongerNeeded(driverped)					
+						SetEntityAsNoLongerNeeded(driverped)
+						elseif deldis > 80 then 
+						driverped = GetPedInVehicleSeat(curcarid,-1)
+						SetEntityAsMissionEntity(curcarid,1,1)
+						SetEntityAsMissionEntity(driverpedr,1,1)
 					end		
---end
---end					
+				
 					
 					
 						if deldis < Config.Deldis then
@@ -619,7 +652,6 @@ if cleared == false then
 				end
 				
 						end
-
 					end
 				end
 			end
