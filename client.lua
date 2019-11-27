@@ -198,15 +198,18 @@ local pedheading = GetEntityHeading(Ped)
 if spawndis2 < Config.MaxSpawndis + vel and spawndis2 > (Config.minSpawndis + vel*2) then
 ----if posforward == true then
 --if h > pedheading - 90 and h < pedheading + 90 then
-for k,v in pairs (players) do	
-Wait(0) 
+for k,v in pairs (players) do
+if tooclose == false then
 local coords = GetEntityCoords(GetPlayerPed(v))
 if GetDistanceBetweenCoords(coords,b,false) < (Config.minSpawndis2 + vel) then
 tooclose = true 
 end 
+Wait(0)
+end
 end
 else
 tooclose = true
+end
 end
 --[[else
 if h > pedheading + 90 and h < pedheading - 90 then
@@ -233,9 +236,11 @@ end]]
 if tooclose == false then
 tooclose2 = false
 for k,v in ipairs (cartable) do
-Wait(5)
+if tooclose2 == false then
 if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 35 then
 tooclose2 = true
+end
+Wait(0)
 end
 end		
 if tooclose2 == false then
@@ -259,10 +264,11 @@ Wait(5)
 if GetVehicleBodyHealth(carid) > 999.9 then
 --print("pedtype1",pedtype)
 Setpedincar(pedtype)
+SetVehicleEngineOn(carid,true,true,true)
 SetVehicleForwardSpeed(carid,16)
 --SetEntityVelocity(carid,10.0,16.0,10.0)
 Setcarspeed(carid)
-SetVehicleEngineOn(carid,true,true,true)
+
 --pedid = NetworkGetNetworkIdFromEntity(driver)
 --NetworkSetEntityCanBlend(driver,true)
 --SetNetworkIdExistsOnAllMachines(pedid, true)
@@ -594,11 +600,11 @@ local tooclose = false
 				else
 				local curcarid = v.carid
 	local carcoords = GetEntityCoords(v.carid)			
-				tooclose = false
-				cleared = false
+				local tooclose3 = false
+
 					for k,v in pairs (players) do
-if cleared == false then					
-					Wait(10) 
+if tooclose3 == false then					
+					Wait(3) 
 				
 					--otherplayer = GetPlayerPed(v)
 					local coords2 = GetEntityCoords(GetPlayerPed(v))
@@ -609,29 +615,27 @@ if cleared == false then
 					--print"bing1"
 					--if GetVehicleClass(GetVehiclePedIsIn(v,false)) == 18 then
 					--print"bing2"
-					if deldis < 80 then 
-				
+					if deldis < 80 then 			
 						driverped = GetPedInVehicleSeat(curcarid,-1)
 						SetEntityAsNoLongerNeeded(curcarid)
 						SetEntityAsNoLongerNeeded(driverped)
 						elseif deldis > 80 then 
 						driverped = GetPedInVehicleSeat(curcarid,-1)
 						SetEntityAsMissionEntity(curcarid,1,1)
-						SetEntityAsMissionEntity(driverpedr,1,1)
+						SetEntityAsMissionEntity(driverped,1,1)
 					end		
 				
 					
 					
 						if deldis < Config.Deldis then
 						
-						tooclose = true
+						tooclose3 = true
 						
 						end
 						--print(IsVehicleSeatFree(curcarid,-1))
 						if IsVehicleSeatFree(curcarid,-1) == true and deldis > Config.Deldis*0.3then  
 						SetEntityAsNoLongerNeeded(curcarid)
 						table.remove(cartable, k)
-						cleared = true
 						if debugmode == true then
 						print"ped not in car - remove car"
 						end
@@ -641,12 +645,11 @@ if cleared == false then
 						end
 						
 						end
-						if tooclose == false then
+						if tooclose3 == false then
 						driverped = GetPedInVehicleSeat(curcarid,-1)
 						SetEntityAsNoLongerNeeded(curcarid)
 						SetEntityAsNoLongerNeeded(driverped)
 						table.remove(cartable, k)
-						cleared = true
 				if debugmode == true then
 				print"car far away Remove"
 				end
