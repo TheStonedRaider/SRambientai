@@ -344,24 +344,24 @@ end
 elseif speedvar == 2 then    --- med 
 
 if speed < 10 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 20 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 70 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 101 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 end
 elseif speedvar == 3 then             -- fast 
 
 if speed < 10 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,2000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 20 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 70 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 elseif speed < 101 then
-TaskVehicleDriveToCoordLongrange(driver,carid,3000.0,3000.0,0.0,2125724159,50)
+TaskVehicleDriveToCoordLongrange(driver,carid,playercoords,2125724159,50)
 end
 end
 end
