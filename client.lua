@@ -583,8 +583,7 @@ if cleared == false then
 					if deldis < 80 then 
 						driverped = GetPedInVehicleSeat(curcarid,-1)
 						SetEntityAsNoLongerNeeded(curcarid)
-						SetEntityAsNoLongerNeeded(driverped)
-					table.remove(cartable, k)					
+						SetEntityAsNoLongerNeeded(driverped)					
 					end		
 --end
 --end					
