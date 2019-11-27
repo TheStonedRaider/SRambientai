@@ -102,7 +102,7 @@ Citizen.CreateThread(function()
 		areafound = true
 		end
 		if areafound == false then
-		Wait(30)
+		Wait(0)
 		GetDistanceBetweenCoords(pedcoords,1620.15,3663.11,33.2,false) < 1300 + random1 then    ---- sandy    
 		density = Config.MaxPerPlayer*Config.SandyMulti
 		isinsandy = true
@@ -229,7 +229,7 @@ end
 else
 tooclose = true
 end
-end
+
 --[[else
 if h > pedheading + 90 and h < pedheading - 90 then
 for k,v in pairs (players) do	
