@@ -1,9 +1,8 @@
 Config                            = {}
-local running = false
-   --- 
-Config.refreshrate = 0
 
-Config.MaxPerPlayer = 30 --------- How many cars are spawned per player, 
+Config.refreshrate = 250
+
+Config.MaxPerPlayer = 28 --------- How many cars are spawned per player, Recomended 60 MAX 
 ------ this devided by the amount of players near  you down to the Set minimum 
 
 Config.Minimum = 1     ------ will try to not let the amount of cars spawned go below this amount 
@@ -15,13 +14,13 @@ Config.parkedcars = 0.5        ----------- Density of parked cars  minimum = 0.0
 
 Config.DisToHalf = 250   ---- Distance to antoher player to lower Density.
 
-Config.minSpawndis = 90   ----- Minimum spawning distance from player
+Config.minSpawndis = 100   ----- Minimum spawning distance from player
 
-Config.MaxSpawndis = 250   ----- Maximum spawning distance from player 
+Config.MaxSpawndis = 290   ----- Maximum spawning distance from player 
 
-Config.minSpawndis2 = 120 ----- Minimum spawning distance from  other players (best kept the same as Config.minSpawndis
+Config.minSpawndis2 = 100 ----- Minimum spawning distance from  other players (best kept the same as Config.minSpawndis
 
-Config.Deldis = 255 ----- Distance that cars will be set as no longer needed ! Always keep this higher than - Config.MaxSpawndis 
+Config.Deldis = 320 ----- Distance that cars will be set as no longer needed ! Always keep this higher than - Config.MaxSpawndis 
 
 Config.Speedmulti = 1.0        --------- Multiplier for avarage speed of vehicles
 
@@ -35,17 +34,18 @@ Config.PaletoMulti = 0.8    ---- Paleto bay
 
 Config.SandyMulti = 0.5   ---- Sandy Shores  
 
-Config.IndustrialMulti = 0.2   ---- All Industrial/work areas
+Config.IndustrialMulti = 0.4   ---- All Industrial/work areas
 
 Config.ElseAreaMulti = 0.4    ---- Eveywhere else 
 
 
 -------------------Debug mode!
-debugrestart = true   --- Set TRUE if restarting script when server is running 
+debugrestart = false   --- Set true if restarting script when server is running 
 
 debugmode =  false  --- shows the search and spawn spots 
 
-debugmode1 =  false  --- shows the search and spawn spots 
+debugmode1 =  false  --- shows the amount if cars spawned  
+
 	 citycars = { --  this is the format you need to put in for your possible locations.
 	{['id'] = -344943009,['pedtype'] = "gen"},
 	{['id'] = 1039032026,['pedtype'] = "gen"},
