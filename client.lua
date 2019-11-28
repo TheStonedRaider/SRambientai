@@ -5,7 +5,8 @@ local pedtable = {}
 refreshrate = 1000
 local peddensity = Config.peddensity
 local parkedcars = Config.parkedcars
-carcount = 0
+local garbagecount = 0
+carcount = -1
 pedtype = "posh"
 running = false
 	function Tl(T)
@@ -71,7 +72,7 @@ Citizen.CreateThread(function()
 	SetPedDensityMultiplierThisFrame(peddensity)
 	SetScenarioPedDensityMultiplierThisFrame(0.0,0.0)
 	if debugmode1 == true then
-drawTxt(0.300, 0.100, 0.2,0.2,0.5, "Car count  = "..carcount.."", 250, 250, 250, 255)
+drawTxt(0.010, 0.010, 0.2,0.2,0.3, "Car count  = "..carcount+1 .."", 250, 250, 250, 255)
 end
 
 
@@ -151,7 +152,7 @@ Citizen.CreateThread(function()
 		end
 		local closeplayers = 0
 		local targetCoords1 = GetEntityCoords(GetPlayerPed(-1))
-		local players = GetActivePlayers()
+		--local players = GetActivePlayers()
 --print("density",density)
 	peddensity = Config.peddensity
 	parkedcars = Config.parkedcars
@@ -196,12 +197,10 @@ until model ~= nil and pedtype ~= nil
 RequestModel(model) 
 while not HasModelLoaded(model) do
 Citizen.Wait(0)
-if debugmode == true then
 
-end 
 --RequestModel(model) 
 end 
-Wait(0)
+Wait(20)
 	
 	math.randomseed(GetGameTimer())
 local chance = math.random(1,4)
@@ -230,7 +229,7 @@ end
 
 a,b,h = GetClosestVehicleNodeWithHeading(coords.x,coords.y,coords.z,8,3,0)
 --a,b,h = GetNthClosestVehicleNodeFavourDirection(coords.x,coords.y,coords.z,GetE,8,3,0)
-players = GetActivePlayers()
+
 local tooclose = false
 local coords2 = GetEntityCoords(GetPlayerPed(-1))
 local spawndis2 = GetDistanceBetweenCoords(coords2,b,false)
@@ -249,6 +248,7 @@ Wait(0)
 end
 end
 end
+players = GetActivePlayers()
 if tooclose == false then
 if spawndis2 < Config.MaxSpawndis + vel and spawndis2 > (Config.minSpawndis + vel*2) then
 for k,v in pairs (players) do
@@ -264,13 +264,13 @@ else
 tooclose = true
 end
 end
-
+Wait(20)
 if tooclose == false then
 tooclose2 = false
 for k,v in ipairs (cartable) do
 Wait(0)
 if tooclose2 == false then
-if Vdist(GetEntityCoords(v.carid),b) < 35 then
+if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 35 then
 tooclose2 = true
 end
 Wait(0)
@@ -319,6 +319,24 @@ end
 else
 SetModelAsNoLongerNeeded(model)
 --end
+end
+if carcount < density*0.3 then
+--print"wait1"
+Wait(0)
+elseif carcount < density*0.6 then
+--print"wait2"
+Wait(400)
+elseif carcount < density*0.8 then
+--print"wait1"
+Wait(1000)
+end
+if garbagecount < 20 then
+garbagecount = garbagecount + 1
+else
+garbagecount = 0
+--collectgarbage()
+--Wait(0)
+--collectgarbage()
 end
 end
 end
