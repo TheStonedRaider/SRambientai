@@ -60,7 +60,7 @@ Citizen.CreateThread(function()
 	hasspawnednow = true
 	end
 end)
-
+players = GetActivePlayers()
 
 
 Citizen.CreateThread(function()
@@ -153,7 +153,7 @@ players = GetActivePlayers()
 		end
 		local closeplayers = 0
 		local targetCoords1 = GetEntityCoords(GetPlayerPed(-1))
-		--local players = GetActivePlayers()
+		local players = GetActivePlayers()
 --print("density",density)
 	peddensity = Config.peddensity
 	parkedcars = Config.parkedcars
