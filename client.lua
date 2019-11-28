@@ -88,7 +88,8 @@ Citizen.CreateThread(function()
 			end
 		until hasspawnednow == true
 	end
-	while true do 
+	while true do
+players = GetActivePlayers()	
 	Wait(3000)
 	local _,_,_,_,_,seed = GetLocalTime()
 	math.randomseed(seed)
@@ -248,7 +249,7 @@ Wait(0)
 end
 end
 end
-players = GetActivePlayers()
+
 if tooclose == false then
 if spawndis2 < Config.MaxSpawndis + vel and spawndis2 > (Config.minSpawndis + vel*2) then
 for k,v in pairs (players) do
