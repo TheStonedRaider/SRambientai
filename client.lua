@@ -2,6 +2,7 @@ local hasspawned = true
 local density = Config.MaxPerPlayer
 local cartable = {}
 refreshrate = 1000
+local isloopon = false
 local peddensity = Config.peddensity
 local parkedcars = Config.parkedcars
 pedtype = "posh"
@@ -147,6 +148,8 @@ end
 
 function startupspawn()
 print"starting SRai loop"
+if isloopon == false then
+isloopon = true
 Wait(0)
 Citizen.CreateThread(function()
 while true do 
@@ -275,6 +278,7 @@ SetModelAsNoLongerNeeded(model)
 end
 end
 end)
+end
 end
 
 function Setpedincar(pedtype)
