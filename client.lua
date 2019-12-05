@@ -23,7 +23,7 @@ pedtable = {}
 
 end
 Citizen.CreateThread(function()
-Wait(300)
+Wait(0)
 refreshrate = Config.refreshrate
 generalpedcount = Tl(generalpeds)
 citycarscount = Tl(citycars)
@@ -71,11 +71,11 @@ Citizen.CreateThread(function()
 	SetPedDensityMultiplierThisFrame(peddensity)
 	SetScenarioPedDensityMultiplierThisFrame(0.0,0.0)
 drawTxta(0.028,0.02,0.4,0.4,1.0, ""..carcount.."", 0,0,0,230)
-drawTxta(0.028,0.04,0.4,0.4,1.0, ""..density.."", 0,0,0,230)
+--drawTxta(0.028,0.04,0.4,0.4,1.0, ""..density.."", 0,0,0,230)
 	end
 end)
 
-Citizen.CreateThread(function()
+--[[Citizen.CreateThread(function()
 	if hasspawned == false then 
 		repeat
 		Wait(5000)
@@ -130,7 +130,7 @@ Citizen.CreateThread(function()
 			end
 		
 	end
-end)
+end)]]
 
 function drawTxta(x,y,width,height,scale, text, r,g,b,a)
   SetTextFont(7)
@@ -153,13 +153,13 @@ isloopon = true
 Wait(0)
 Citizen.CreateThread(function()
 while true do 
-Wait(refreshrate) 
+Wait(200) 
 if debugmode == true then
 --print(Tablelength(cartable))
 end
 carcount = Tablelength(cartable)
 if carcount < density or Tablelength(cartable) < Config.Minimum then
-Wait(0)
+--Wait(0)
 local Ped = GetPlayerPed(-1)
 if IsPedInAnyVehicle(Ped,true) then
 vel = GetVehicleWheelSpeed(GetVehiclePedIsIn(Ped,false),1)
@@ -171,7 +171,7 @@ Wait(0)
  model,pedtype  = Carlist()
 until model ~= nil and pedtype ~= nil
 --if model ~= nil then ---- pick car 
-Wait(0)
+--Wait(0)
 local chance = math.random(1,4)
 local diff2 = math.random(Config.minSpawndis + 15,Config.MaxSpawndis)
 if chance == 1 then
@@ -203,22 +203,20 @@ local coords = GetEntityCoords(GetPlayerPed(v))
 if GetDistanceBetweenCoords(coords,b,false) < (Config.minSpawndis2 + vel) then
 tooclose = true 
 end 
+
+
+
+
 end
 else
 tooclose = true
 end
-for k,v in ipairs (cartable) do
-Wait(15)
-if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 50 then
-tooclose2 = true
-end
-end	
 if tooclose == false then
-Wait(0)
+--Wait(0)
 
 RequestModel(model) 
 while not HasModelLoaded(model) do
-Citizen.Wait(1000)
+Citizen.Wait(0)
 if debugmode == true then
 
 end 
@@ -226,13 +224,14 @@ end
 end 
 tooclose2 = false
 for k,v in ipairs (cartable) do
-Wait(5)
+Wait(0)
 if GetDistanceBetweenCoords(GetEntityCoords(v.carid),b,false) < 45 then
 tooclose2 = true
 end
 end		
 if tooclose2 == false then
 carid = CreateVehicle(model,b,h,true, 0)
+SetEntityCoords(carid,GetOffsetFromEntityInWorldCoords(carid,0.0,2.0,0.0), false, false, false, false)
 table.insert(cartable, {carid = carid})
 if debugmode == true then
 debug3(b)
@@ -246,7 +245,7 @@ end
 speed = 10
 
 
-Wait(5)
+--Wait(0)
 --if GetVehicleBodyHealth(carid) > 999.9 then
 --print("pedtype1",pedtype)
 Setpedincar(pedtype)
@@ -514,13 +513,13 @@ local tooclose = false
 	while true do 
 	mycurid = GetPlayerServerId(PlayerId())
 		Wait(1500)
-		print"test"
+		--print"test"
 			for k,v in pairs (cartable) do
 			Wait(30)
 		
 			cleared = false
 				if DoesEntityExist(v.carid)  then
-					print"exists"
+				--	print"exists"
 				else
 				if debugmode == true then
 				--TriggerServerEvent('DEBUG'," 3 3 3 3 3 3 3 3 3 3 3  3 delete non existant car",mycurid)
@@ -531,13 +530,17 @@ local tooclose = false
 		
 			for k,v in pairs (pedtable) do
 			Wait(300)
+			if DoesEntityExist(v.pedid) then
 			if IsPedInAnyVehicle(v.pedid,false) == false then
 			table.remove(pedtable,k)
 			if debugmode == true then
 				if debugmode == true then
 				--TriggerServerEvent('DEBUG'," 1 1 1 1 1 1 1 1 1 ped not in car remove ped from table",mycurid)
-			end		
+			end	
+end			
 		end
+		else
+		table.remove(pedtable,k)
 		end
 		end
 		
